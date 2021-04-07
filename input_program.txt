@@ -1,0 +1,16 @@
+
+if(num > <= 5)
+{
+{
+	while(val==0)
+	{
+		put({num num)
+
+	}
+}
+else
+{
+{
+	put((var var)
+}
+

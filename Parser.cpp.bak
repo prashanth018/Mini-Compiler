@@ -1,0 +1,331 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct node
+{
+    string val;
+    string type;
+};
+map<string,int> c;
+map<int,pair<string,string> > rule;
+map<string,int> r;
+void PrintStack(stack<string> st)
+{
+    string stri;
+    stack<string> st2;
+    while(!st.empty())
+    {
+        st2.push(st.top());
+        st.pop();
+    }
+    while(!st2.empty())
+    {
+        cout<<st2.top()<<" ";
+        st2.pop();
+    }
+    cout<<endl;
+
+    return;
+}
+int main()
+{
+    int i,j,k;
+    ifstream infile;
+    string line;
+    infile.open ("output.txt");
+    queue<node> q;
+    while(getline(infile, line))
+    {
+        istringstream iss(line);
+        int a;
+        string v,t;
+        if (!(iss >> a >> v >> t)) { break; }
+        else
+        {
+            node n;
+            n.val = v;
+            n.type = t;
+            q.push(n);
+        }
+    }
+    //while(!q.empty())
+    //{
+    //    node x = q.front();
+    //    q.pop();
+    //    cout<<x.val<<"\t"<<x.type<<endl;
+    //}
+    int m = 54;
+    int n = 28;
+
+    string data[m][n];
+
+    ifstream file("new.csv");
+    for(int row = 0; row < m; ++row)
+    {
+        string line;
+        getline(file, line);
+        if ( !file.good() )
+            {cout<<":("<<endl;break;}
+
+        stringstream iss(line);
+
+        for (int col = 0; col < n; ++col)
+        {
+            string val;
+            getline(iss, val, ',');
+            if ( !iss.good() )
+                break;
+
+            stringstream convertor(val);
+            convertor >> data[row][col];
+            //cout<<data[row][col]<<"    ";
+            if(row==0 && col!=0)
+            {
+                c[data[row][col]]=col;
+            }
+            else if(col==0 && row!=0)
+            {
+                r[data[row][col]]=row;
+            }
+        }
+        //cout<<endl;
+    }
+    map<string,int>::iterator it;
+    //for(it=r.begin();it!=r.end();it++)
+    //{
+        //cout<<it->first<<"\t"<<it->second<<endl;
+    //}
+    //for(it=c.begin();it!=c.end();it++)
+    //{
+        //cout<<it->first<<"\t"<<it->second<<endl;
+    //}
+
+    m = 18;
+    n = 2;
+
+    ifstream file1("new3.csv");
+    int l=0;
+    for(int row = 0; row < m; ++row)
+    {
+        string line;
+        getline(file1, line);
+        if ( !file1.good() )
+            {cout<<":("<<endl;break;}
+
+        stringstream iss(line);
+        string x;
+        for (int col = 0; col < n; col++)
+        {
+            string val;
+            getline(iss, val, ',');
+            if ( !iss.good() )
+                break;
+
+            stringstream convertor(val);
+            string p;
+            convertor >> p;
+            //cout<<data[row][col]<<"    ";
+            if(col==0)
+            {
+                //cout<<p<<endl;
+                //c[data[row][col]]=col;
+                x = p;
+            }
+            else if(col==1)
+            {
+                //cout<<p<<endl;
+                //cout<<"janu"<<endl;
+                //r[data[row][col]]=row;
+                //cout<<"\t"<<p<<endl;
+                //rule[x] = p;
+                rule[l] = make_pair(x,p);
+                l++;
+            }
+        }
+        //cout<<endl;
+    }
+    map<int,pair<string,string> >::iterator it1;
+    //for(it1=rule.begin();it1!=rule.end();it1++)
+    //{
+    //    cout<<it1->first<<" "<<it1->second.first<<"\t"<<it1->second.second<<endl;
+    //}
+    node u;
+    string stri;
+    queue<node> q2;
+    while(!q.empty())
+    {
+        u = q.front();
+        q.pop();
+        if(u.type == "Keyword" || u.type == "Delimiter")
+        {
+            node temp;
+            temp = u;
+            /*
+            if(u.type == "Keyword")
+            {
+
+            }
+            else
+            {
+                temp.type = temp
+            }*/
+            temp.type = temp.val;
+            q2.push(temp);
+        }
+        else if(u.type == "Operator")
+        {
+            node temp;
+            temp.val = u.val;
+            temp.type = "o";
+            q2.push(temp);
+        }
+        else if(u.type == "Identifier")
+        {
+            node temp;
+            temp.val = u.val;
+            temp.type = "v";
+            q2.push(temp);
+        }
+        else if(u.type == "Integer_Literal")
+        {
+            node temp;
+            temp.val = u.val;
+            temp.type = "i";
+            q2.push(temp);
+        }
+        else if(u.type == "Floating_Point_Literal")
+        {
+            node temp;
+            temp.val = u.val;
+            temp.type = "i";
+            q2.push(temp);
+        }
+    }
+    node e;
+    e.val = "$";
+    e.type = "$";
+    q2.push(e);
+    stri="";
+    while(!q2.empty())
+    {
+        node x;
+        x = q2.front();
+        q2.pop();
+        //cout<<x.type<<" ";
+        stri+=(x.type);
+    }
+    cout<<stri<<endl;
+
+
+    //cout<<
+    //stack<node> st;
+    //node x;
+    //x.val = "0";
+    //st.push(x);
+    //string s="0";
+    //string s1="i";
+    //cout<<data[r[s]][c[s1]]<<endl;
+
+    stack<string> st;
+    i=0;
+    st.push("0");
+    string err;
+    err="";
+    string total;
+    while(1)
+    {
+        PrintStack(st);
+        string xs = st.top();
+        if(xs[0]>='0'&&xs[0]<='9')
+        {
+            string str;
+            str+=stri[i];
+            string el = data[r[xs]][c[ str ] ];
+            if(el=="")
+            {
+                err+=str;
+                i++;
+            }
+            else if(el[0]=='s')
+            {
+                total+=stri[i];
+                if(err!="")
+                {
+                    cout<<err<<endl;
+                    err="";
+                }
+                string op="";
+                int j=1;
+                for(;j<el.length();j++)
+                    op+=el[j];
+                //st.pop();
+                st.push(str);
+                i++;
+                st.push(op);
+            }
+            else if(el[0]=='r')
+            {
+                if(err!="")
+                {
+                    cout<<err<<endl;
+                    err="";
+                }
+                //st.pop();
+                string op="";
+                int j=1;
+                for(;j<el.length();j++)
+                    op+=el[j];
+                string k = rule[atoi(op.c_str())].second;
+                int len = k.length();
+                //cout<<len<<endl;
+                len*=2;
+                while(len--)
+                    st.pop();
+                st.push(rule[atoi(op.c_str())].first);
+            }
+        }
+        else if(xs[0]>='A' && xs[0]<='Z')
+        {
+            st.pop();
+            string h = st.top();
+            st.push(xs);
+            //cout<<data[r[h]][c[xs]]<<endl;
+            st.push(data[r[h]][c[xs]]);
+        }
+        string strin;
+        strin+=stri[i];
+        if(data[r[st.top()]][c[strin]]=="acc")
+        {
+            cout<<"Accepted!!"<<endl;
+            break;
+        }
+        //PrintStack(st);
+        //cout<<"hey";
+    }
+    //cout<<total<<endl;
+    for(i=0;i<total.length();i++)
+    {
+        if(total[i]=='v')
+            cout<<" variable"<<" ";
+        else if(total[i]=='o')
+            cout<<" operator"<<" ";
+        else if(total[i]=='(')
+        {
+            cout<<"(";
+            while(total[i]!=')')
+            {
+                i++;
+                if(total[i]=='v')
+                    cout<<" variable"<<" ";
+                else if(total[i]=='o')
+                    cout<<" operator"<<" ";
+                else if(total[i]=='i')
+                    cout<<" integer"<<" ";
+            }
+            cout<<")";
+        }
+        else
+            cout<<total[i];
+    }
+    return 0;
+
+}
